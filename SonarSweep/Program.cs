@@ -4,7 +4,7 @@ namespace SonarSweep
 {
     internal static class Program
     {
-        private static int[] sweepArray = new int[] { 141,
+        private static readonly int[] sweepArray = new int[] { 141,
 140,
 160,
 161,

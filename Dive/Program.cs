@@ -4,7 +4,6 @@ namespace Dive
 {
     internal static class Program
     {
-        private static readonly string[] testPath = { "forward 5", "down 5", "forward 8", "up 3", "down 8", "forward 2" };
         private static readonly string[] questionPath = { "forward 6",
 "down 2",
 "forward 2",
@@ -1006,6 +1005,7 @@ namespace Dive
 "down 9",
 "forward 8",
 };
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -1014,7 +1014,8 @@ namespace Dive
         {
             //ApplicationConfiguration.Initialize();
             //Application.Run(new Form1());
-            Question1();           
+            Question1();
+            Question2();
         }
 
         public static void Question1()
@@ -1030,15 +1031,15 @@ namespace Dive
                     switch(splitString[0])
                     {
                         case "forward":
-                            int.TryParse(splitString[1], out int howMuch);
+                            _ = int.TryParse(splitString[1], out int howMuch);
                             horizontal += howMuch;
                             break;
                         case "down":
-                            int.TryParse(splitString[1], out int howDeep);
+                            _ = int.TryParse(splitString[1], out int howDeep);
                             depth += howDeep;
                             break;
                         case "up":
-                            int.TryParse(splitString[1], out int howHigh);
+                            _ = int.TryParse(splitString[1], out int howHigh);
                             depth -= howHigh;
                             break;
                     }
@@ -1046,6 +1047,39 @@ namespace Dive
             }
 
             Debug.WriteLine($"{{1}} Position: {horizontal * depth}");
+        }
+
+        public static void Question2()
+        {
+            int horizontal = 0;
+            int depth = 0;
+            int aim = 0;
+
+            foreach (string s in questionPath)
+            {
+                string[] splitString = s.Split(' ');
+                if (splitString.Length > 0)
+                {
+                    switch (splitString[0])
+                    {
+                        case "forward":
+                            _ = int.TryParse(splitString[1], out int howMuch);
+                            horizontal += howMuch;
+                            depth += (aim * howMuch);
+                            break;
+                        case "down":
+                            _ = int.TryParse(splitString[1], out int howDeep);
+                            aim += howDeep;
+                            break;
+                        case "up":
+                            _ = int.TryParse(splitString[1], out int howHigh);
+                            aim -= howHigh;
+                            break;
+                    }
+                }
+            }
+
+            Debug.WriteLine($"{{2}} Position: {horizontal * depth}");
         }
     }
 }
