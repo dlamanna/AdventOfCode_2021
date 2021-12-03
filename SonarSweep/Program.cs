@@ -4,15 +4,7 @@ namespace SonarSweep
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            //ApplicationConfiguration.Initialize();
-            //Application.Run(new Form1());
-            int[] sweepArray = new int[] { 141,
+        private static int[] sweepArray = new int[] { 141,
 140,
 160,
 161,
@@ -2012,10 +2004,20 @@ namespace SonarSweep
 9089,
 9102,
 9105 };
-            Question1(ref sweepArray);
+
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            //ApplicationConfiguration.Initialize();
+            //Application.Run(new Form1());
+            Question1();
+            Question2();
         }
 
-        public static void Question1(ref int[] sweepArray)
+        public static void Question1()
         {
             int increasingCount = 0;
             for (int i = 0; i < sweepArray.Length - 1; i++)
@@ -2026,7 +2028,23 @@ namespace SonarSweep
                 }
             }
 
-            Debug.WriteLine($"Number of increases from previous index: {increasingCount}");
+            Debug.WriteLine($"{{1}} Number of increases from previous index: {increasingCount}");
+        }
+
+        public static void Question2()
+        {
+            int increasingCount = 0;
+            int previousTotal = sweepArray[0] + sweepArray[1] + sweepArray[2];
+            for (int i = 1; i < sweepArray.Length - 2; i++)
+            {
+                int currentTotal = sweepArray[i] + sweepArray[i + 1] + sweepArray[i + 2];
+                if (currentTotal > previousTotal)
+                {
+                    increasingCount++;
+                }
+                previousTotal = currentTotal;
+            }
+            Debug.WriteLine($"{{2}} Number of increases from previous index: {increasingCount}");
         }
     }
 }
