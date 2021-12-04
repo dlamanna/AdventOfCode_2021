@@ -1007,6 +1007,10 @@ namespace _3_Sub
 "100001000000",
 "110100110111"
     };
+        private static int[]? sameBitCount;
+        private static int[]? bitCount;
+        private static string[]? whichDataInput;
+        
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -1016,34 +1020,19 @@ namespace _3_Sub
             //ApplicationConfiguration.Initialize();
             //Application.Run(new Form1());
             Question1();
+            Question2();
         }
 
         public static void Question1()
         {
-            
-            int[] bitCount = { 0, 0, 0, 0, 0,0,0,0,0,0,0,0 };
+            whichDataInput = questionInput;
+            sameBitCount = new int[whichDataInput[0].Length];
+            bitCount = new int[sameBitCount.Length];
 
-            for(int i = 0;i< questionInput.Length;i++)
-            {
-                for (int j = 0; j < questionInput[i].Length; j++)
-                {
-                    if (questionInput[i][j].Equals('1'))
-                    {
-                        bitCount[j]++;
-                    }
-                }
-            }
+            CountBitNum(0);
 
-            /*Debug.Write($"Bitcount: ");
-            for(int i = 0;i<bitCount.Length;i++)
-            {
-                Debug.Write($"{bitCount[i]} ");
-            }*/
-
-            string gammaString = GammaRate(ref bitCount);
-            string epsilonString = EpsilonRate(ref bitCount);
-            //int gammaDecimal = ConvertBinaryStringToDecimal(gammaString);
-            //int epsilonDecimal = ConvertBinaryStringToDecimal(epsilonString);
+            string gammaString = GammaRate();
+            string epsilonString = EpsilonRate();
             int gammaDecimal = Convert.ToInt32(gammaString, 2);
             int epsilonDecimal = Convert.ToInt32(epsilonString, 2);
 
@@ -1052,37 +1041,142 @@ namespace _3_Sub
             Debug.WriteLine($"{{1}} Power Consumption (G*E):\t{gammaDecimal * epsilonDecimal}");
         }
 
-        public static string GammaRate(ref int[] bitCount)
+        public static void Question2()
+        {
+            whichDataInput = questionInput;
+
+            int oxygenRating = CalculateGasRating(1);
+            int carbonRating = CalculateGasRating(0);
+    
+            Debug.WriteLine($"{{2}} Oxygen:\t{oxygenRating}");
+            Debug.WriteLine($"{{2}} Carbon:\t{carbonRating}");
+            Debug.WriteLine($"{{2}} Life Support (O2*CO2):\t{oxygenRating * carbonRating}");
+        }
+
+        public static void CountBitNum(int startingBit)
+        {
+            bitCount = new int[whichDataInput[0].Length];
+            for (int i = 0; i < whichDataInput.Length; i++)
+            {
+                for (int j = startingBit; j < whichDataInput[i].Length; j++)
+                {
+                    if (whichDataInput[i][j].Equals('1'))
+                    {
+                        bitCount[j]++;
+                    }
+                }
+            }
+        }
+
+        public static int CalculateGasRating(int prefNum)
+        {   
+            List<string> remainingSets = new(whichDataInput);
+            string whichGas = prefNum == 1 ? "Oxygen" : "Carbon";
+            int result = 0;
+            string input;
+            for (int bit = 0; bit < whichDataInput[0].Length; bit++)
+            {
+                if(prefNum == 1)
+                    input = BitCommonality(bit, ref remainingSets, true);
+                else
+                    input = BitCommonality(bit, ref remainingSets, false);
+
+                for (int i = 0; i < remainingSets.Count; i++)
+                {
+                    if (remainingSets.Count == 1)
+                    {
+                        // Stop, return result here if only one remains
+                        Debug.WriteLine($"\tAdding {{{whichGas}}}: {remainingSets[0]}");
+                        return Convert.ToInt32(remainingSets[0], 2);
+                    }
+
+                    if (!remainingSets[i][bit].Equals(input[0]))
+                    {
+                        Debug.WriteLine($"\tRemoving {{{whichGas}}}: {remainingSets[i]} because [{bit}] != '{input}'");
+                        remainingSets.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+
+            for(int i = 0;i< remainingSets.Count; i++)
+            {            
+                Debug.WriteLine($"\tAdding {{{whichGas}}}: {remainingSets[i]}");
+                result += Convert.ToInt32(remainingSets[i], 2);
+            }
+
+            return result;
+        }
+
+        public static string BitCommonality(int whichBit, ref List<string> remainingSets, bool mostCommon)
+        {
+            int zeroCount = 0;
+            int oneCount = 0;
+            for(int i = 0;i<remainingSets.Count;i++)
+            {
+                if (remainingSets[i][whichBit].Equals('0'))
+                    zeroCount++;
+                else
+                    oneCount++;
+            }
+
+            Debug.WriteLine($"\t\t[{whichBit}] {zeroCount}x0,{oneCount}x1");
+            if(mostCommon)
+            {
+                return oneCount >= zeroCount ? "1" : "0"; 
+            }
+            else
+            {
+                return zeroCount <= oneCount ? "0" : "1";
+            }
+        }
+
+        public static string GammaRate()
         {
             string byteString = "";
+            sameBitCount = new int[bitCount.Length];
             for(int i = 0;i<bitCount.Length;i++)
             {
-                if (bitCount[i] > questionInput.Length/2)
+                if (bitCount[i] == whichDataInput.Length / 2)
                 {
-                    byteString = byteString + "1";
+                    sameBitCount[i] = 1;
+                }
+
+                if (bitCount[i] >= whichDataInput.Length/2)
+                {
+                    byteString = $"{byteString}1";
                 }
                 else
                 {
-                    byteString = byteString + "0";
+                    byteString = $"{byteString}0";
                 }
             }
+            Debug.WriteLine($"{{-}} Gamma:\t{byteString}");
+            Debug.WriteLine($"{{-}} EqualBits:\t{string.Join("", sameBitCount)}");
             return byteString;
         }
 
-        public static string EpsilonRate(ref int[] bitCount)
+        public static string EpsilonRate()
         {
             string byteString = "";
             for (int i = 0; i < bitCount.Length; i++)
             {
-                if (bitCount[i] > questionInput.Length / 2)
+                if (bitCount[i] == whichDataInput.Length / 2) 
                 {
-                    byteString = byteString + "0";
+                    sameBitCount[i] = 0;
+                }
+
+                if (bitCount[i] >= whichDataInput.Length / 2)
+                {
+                    byteString = $"{byteString}0";
                 }
                 else
                 {
-                    byteString = byteString + "1";
+                    byteString = $"{byteString}1";
                 }
             }
+            Debug.WriteLine($"{{-}} Epsilon:\t{byteString}");
+            Debug.WriteLine($"{{-}} EqualBits:\t{string.Join("",sameBitCount)}");
             return byteString;
         }
     }
