@@ -88,11 +88,11 @@ namespace _4_Bingo
                     PrintBoard();
                     return correctAnswer;
                 }
-                else
+                /*else
                 {
                     Debug.WriteLine("Not Winner:\n");
                     PrintBoard();
-                }
+                }*/
             }
 
             return -1;

@@ -51,21 +51,65 @@ namespace _4_Bingo
             testBoardArray.Add(testBoardThree);
             string[] lines = File.ReadAllLines(@"C:\Users\phuze\Dropbox\Programming\AdventOfCode_2021\4_Bingo\BoardList.txt");
             CreateBoardsFromStrings(ref lines);
+            Question1();
+            Question2();
+        }
+
+        public static void Question1()
+        {
             int currentNumberCallIndex = 5;
-            for(int i = 0;i<5;i++)
+            for (int i = 0; i < 5; i++)
             {
                 MarkOffBoardNumbers(whichNumberOrder[i]);
             }
 
             int winnerScore = CheckBoardsForWinner();
-            while(winnerScore == -1)
+            while (winnerScore == -1)
             {
                 MarkOffBoardNumbers(whichNumberOrder[currentNumberCallIndex]);
                 winnerScore = CheckBoardsForWinner();
                 currentNumberCallIndex++;
             }
             Debug.WriteLine($"We have a winner with number: {whichNumberOrder[currentNumberCallIndex - 1]}!");
-            Debug.WriteLine($"Complete Score (Sum*Winning#): {{{winnerScore*whichNumberOrder[currentNumberCallIndex-1]}}}");
+            Debug.WriteLine($"Complete Score (Sum*Winning#): {{{winnerScore * whichNumberOrder[currentNumberCallIndex - 1]}}}");
+        }
+
+        public static void Question2()
+        {
+            int currentNumberCallIndex = 5;
+            for (int i = 0; i < 5; i++)
+            {
+                MarkOffBoardNumbers(whichNumberOrder[i]);
+            }
+
+            _ = CheckBoardsForWinnerAndRemove();
+            while (whichBoardArray.Count > 1)
+            {
+                if (currentNumberCallIndex >= whichNumberOrder.Length) 
+                {
+                    Debug.WriteLine($"wtf happened here");
+                    return;
+                }
+                MarkOffBoardNumbers(whichNumberOrder[currentNumberCallIndex]);
+                _ = CheckBoardsForWinnerAndRemove();
+                currentNumberCallIndex++;
+            }
+            
+            // now we're down to just one board, keep calling numbers until we get a winner
+            int winnerScore = -1;
+            while (winnerScore == -1)
+            {
+                if (currentNumberCallIndex >= whichNumberOrder.Length)
+                {
+                    Debug.WriteLine($"wtf happened here");
+                    return;
+                }
+                MarkOffBoardNumbers(whichNumberOrder[currentNumberCallIndex]);
+                winnerScore = CheckBoardsForWinner();
+                currentNumberCallIndex++;
+            }
+            Debug.WriteLine($"We have the worst winner with number: {whichNumberOrder[currentNumberCallIndex - 1]}!");
+            Debug.WriteLine($"Complete Score (Sum*Winning#): {{{winnerScore * whichNumberOrder[currentNumberCallIndex - 1]}}}");
         }
 
         public static void MarkOffBoardNumbers(int calledNumber)
@@ -74,6 +118,25 @@ namespace _4_Bingo
             {
                 b.MarkOffNumber(calledNumber);
             }
+        }
+
+        public static int CheckBoardsForWinnerAndRemove()
+        {
+            int retVal = -1;
+            for(int i = 0;i<whichBoardArray.Count;i++)
+            {
+                Board b = whichBoardArray[i];
+                retVal = b.CheckForWinner();
+                if (retVal != -1)
+                {
+                    Debug.WriteLine($"Removing winner: [{whichBoardArray.IndexOf(b)}]");
+                    Debug.WriteLine("_________________________________________________");
+                    whichBoardArray.Remove(b);
+                    i--;
+                    continue;
+                }
+            }
+            return retVal;
         }
 
         public static int CheckBoardsForWinner()
