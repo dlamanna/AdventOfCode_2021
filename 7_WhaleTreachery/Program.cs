@@ -21,16 +21,16 @@ namespace WhaleTreachery
             int averagePos = AveragePositions();
             Debug.WriteLine($"Position Average: {averagePos}");
 
-            int leastFuelRecord = 256256256;
+            System.Numerics.BigInteger leastFuelRecord = 25625625625;
             for(int i = 0;i < whichInput.Max();i++)
             {
-                int totalFuelRequired = 0;
-                for(int j = 0;j < whichInput.Count;j++)
+                System.Numerics.BigInteger totalFuelRequired = 0;
+                for (int j = 0; j < whichInput.Count; j++)
                 {
-                    totalFuelRequired += Math.Abs(whichInput[j] - i);
+                    totalFuelRequired += SumFactorial(Math.Abs(whichInput[j] - i));
                 }
 
-                if(totalFuelRequired < leastFuelRecord)
+                if (totalFuelRequired < leastFuelRecord)
                 {
                     Debug.WriteLine($"Found new best position: {i} // using {totalFuelRequired} fuel");
                     leastFuelRecord = totalFuelRequired;
@@ -41,6 +41,16 @@ namespace WhaleTreachery
         public static int AveragePositions()
         {
             return whichInput.Sum() / whichInput.Count;
+        }
+
+        public static int SumFactorial(int num)
+        {
+            int sum = 0;
+            for(int i = 1;i<=num;i++)
+            {
+                sum += i;
+            }
+            return sum;
         }
     }
 }
