@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace _4_Bingo
+namespace Bingo
 {
     public class Board
     {    

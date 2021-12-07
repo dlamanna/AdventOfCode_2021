@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace _3_Sub
+namespace Sub
 {
     internal static class Program
     {

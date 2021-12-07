@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace _5_Hydrothermal
+namespace Hydrothermal
 {
     internal static class Program
     {

@@ -1,4 +1,4 @@
-﻿namespace _5_Hydrothermal
+﻿namespace Hydrothermal
 {
     public class Vector
     {
