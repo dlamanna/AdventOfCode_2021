@@ -6,7 +6,7 @@ namespace SevenSegmentSearch
     {
         private static string[] testLines = File.ReadAllLines(@"C:\Users\phuze\Dropbox\Programming\AdventOfCode_2021\8_SevenSegmentSearch\TestInput.txt");
         private static string[] questionLines = File.ReadAllLines(@"C:\Users\phuze\Dropbox\Programming\AdventOfCode_2021\8_SevenSegmentSearch\CodeInput.txt");
-        private static string[] whichInputLines = testLines;
+        private static string[] whichInputLines = questionLines;
         private static List<string> testStrings = new List<string>();
         private static List<string> questionStrings = new List<string>();
         private static List<string> whichInput = testStrings;
@@ -52,7 +52,9 @@ namespace SevenSegmentSearch
                     decoderList.AddRange(splitSplitLines);
                     decoderList.AddRange(answerToDecode);
                     completedNumber = BuildSegments(ref decoderList);
-                    outputSum += completedNumber.DecodeString(answerToDecode);
+                    int newDecoder = completedNumber.DecodeString(answerToDecode);
+                    outputSum += newDecoder;
+                    Debug.WriteLine($"\t\t!!! Decoded Number: {newDecoder}\t\tRunning Sum: {outputSum}");
                 }
                 else
                 {
@@ -77,6 +79,8 @@ namespace SevenSegmentSearch
                         return newNumber;
                     }
                 }
+                Debug.WriteLine("Program::BuildSegments Finished for-loop, current state:");
+                //newNumber.PrintPossibilities();
             }
             //newNumber.Print();
             return newNumber;

@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace SevenSegmentSearch
 {
+    enum Identifier
+    {
+        Top,
+        TopLeft,
+        TopRight,
+        Middle,
+        BottomLeft,
+        BottomRight,
+        Bottom
+    }
+
     internal class SegmentNumber
     {
         /*   dddd
@@ -24,10 +30,19 @@ namespace SevenSegmentSearch
         public string BottomLeft { get; set; }
         public string BottomRight { get; set; }
         public string Bottom { get; set; }
+        public Dictionary<Identifier, string> PositionPossibilities { get; set; }
 
         public SegmentNumber()
         {
             Top = TopLeft = TopRight = Middle = BottomLeft = BottomRight = Bottom = "";
+            PositionPossibilities = new();
+            PositionPossibilities.Add(Identifier.Top, "abcdefg");
+            PositionPossibilities.Add(Identifier.TopLeft, "abcdefg");
+            PositionPossibilities.Add(Identifier.TopRight, "abcdefg");
+            PositionPossibilities.Add(Identifier.Middle, "abcdefg");
+            PositionPossibilities.Add(Identifier.BottomLeft, "abcdefg");
+            PositionPossibilities.Add(Identifier.BottomRight, "abcdefg");
+            PositionPossibilities.Add(Identifier.Bottom, "abcdefg");
         }
 
         public int DecodeString(string[] input)
@@ -99,7 +114,7 @@ namespace SevenSegmentSearch
             {
                 return "6";
             }     
-            else if (filledArray[0] && filledArray[1] && filledArray[2] && filledArray[3] && filledArray[4] && filledArray[6])
+            else if (filledArray[0] && filledArray[1] && filledArray[2] && filledArray[3] && filledArray[5] && filledArray[6])
             {
                 return "9";
             }
@@ -137,31 +152,174 @@ namespace SevenSegmentSearch
             }
         }
 
+        public void UpdateStrings()
+        {
+            if (Top.Equals("") && PositionPossibilities[Identifier.Top].Length == 1)
+            {               
+                Top = PositionPossibilities[Identifier.Top];
+                Debug.WriteLine($"Figured out Top: {Top}");
+                RemovePossibilitiesFromOtherPositions(Identifier.Top, Top);
+            }
+            if (TopLeft.Equals("") && PositionPossibilities[Identifier.TopLeft].Length == 1)
+            {
+                TopLeft = PositionPossibilities[Identifier.TopLeft];
+                Debug.WriteLine($"Figured out TopLeft: {TopLeft}");
+                RemovePossibilitiesFromOtherPositions(Identifier.TopLeft, TopLeft);
+            }
+            if (TopRight.Equals("") && PositionPossibilities[Identifier.TopRight].Length == 1)
+            {
+                TopRight = PositionPossibilities[Identifier.TopRight];
+                Debug.WriteLine($"Figured out TopRight: {TopRight}");
+                RemovePossibilitiesFromOtherPositions(Identifier.TopRight, TopRight);
+            }
+            if (Middle.Equals("") && PositionPossibilities[Identifier.Middle].Length == 1)
+            {
+                Middle = PositionPossibilities[Identifier.Middle];
+                Debug.WriteLine($"Figured out Middle: {Middle}");
+                RemovePossibilitiesFromOtherPositions(Identifier.Middle, Middle);
+            }
+            if (BottomLeft.Equals("") && PositionPossibilities[Identifier.BottomLeft].Length == 1)
+            {
+                BottomLeft = PositionPossibilities[Identifier.BottomLeft];
+                Debug.WriteLine($"Figured out BottomLeft: {BottomLeft}");
+                RemovePossibilitiesFromOtherPositions(Identifier.BottomLeft, BottomLeft);
+            }
+            if (BottomRight.Equals("") && PositionPossibilities[Identifier.BottomRight].Length == 1)
+            {
+                BottomRight = PositionPossibilities[Identifier.BottomRight];
+                Debug.WriteLine($"Figured out BottomRight: {BottomRight}");
+                RemovePossibilitiesFromOtherPositions(Identifier.BottomRight, BottomRight);
+            }
+            if (Bottom.Equals("") && PositionPossibilities[Identifier.Bottom].Length == 1)
+            {
+                Bottom = PositionPossibilities[Identifier.Bottom];
+                Debug.WriteLine($"Figured out Bottom: {Bottom}");
+                RemovePossibilitiesFromOtherPositions(Identifier.Bottom, Bottom);
+            }
+        }
+
+        public void RemovePossibilitiesFromOtherPositions(Identifier identifier, string replaceMe)
+        {
+            bool anyChangesMade = false;
+            if(Top.Equals("") &&
+                identifier != Identifier.Top &&
+                PositionPossibilities[Identifier.Top].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.Top].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.Top] = updatedString;
+                anyChangesMade = true;
+            }
+            if (TopLeft.Equals("") &&
+                identifier != Identifier.TopLeft &&
+                PositionPossibilities[Identifier.TopLeft].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.TopLeft].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.TopLeft] = updatedString;
+                anyChangesMade = true;
+            }
+            if (TopRight.Equals("") &&
+                identifier != Identifier.TopRight &&
+                PositionPossibilities[Identifier.TopRight].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.TopRight].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.TopRight] = updatedString;
+                anyChangesMade = true;
+            }
+            if (Middle.Equals("") &&
+                identifier != Identifier.Middle &&
+                PositionPossibilities[Identifier.Middle].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.Middle].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.Middle] = updatedString;
+                anyChangesMade = true;
+            }
+            if (BottomLeft.Equals("") &&
+                identifier != Identifier.BottomLeft &&
+                PositionPossibilities[Identifier.BottomLeft].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.BottomLeft].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.BottomLeft] = updatedString;
+                anyChangesMade = true;
+            }
+            if (BottomRight.Equals("") &&
+                identifier != Identifier.BottomRight &&
+                PositionPossibilities[Identifier.BottomRight].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.BottomRight].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.BottomRight] = updatedString;
+                anyChangesMade = true;
+            }
+            if (Bottom.Equals("") &&
+                identifier != Identifier.Bottom &&
+                PositionPossibilities[Identifier.Bottom].Contains(replaceMe))
+            {
+                string updatedString = PositionPossibilities[Identifier.Bottom].Replace(replaceMe, string.Empty);
+                PositionPossibilities[Identifier.Bottom] = updatedString;
+                anyChangesMade = true;
+            }
+            
+            if(anyChangesMade)
+                UpdateStrings();
+        }
+
+        public void RemoveAllPossibilitiesOtherThan(Identifier identifier, params char[] charsToRemove)
+        {
+            string updatedString = "";
+            string possString = PositionPossibilities[identifier];
+            int i = 0;
+            do
+            {
+                possString = PositionPossibilities[identifier];
+                bool foundLetter = false;
+                for(int j = 0;j<charsToRemove.Length;j++)
+                {
+                    if (possString[i] == charsToRemove[j])
+                    {
+                        foundLetter = true;
+                    }
+                }
+                if (!foundLetter)
+                {
+                    updatedString = possString.Replace("" + possString[i], "");
+                    PositionPossibilities[identifier] = updatedString;
+                    /*Debug.WriteLine($"Removing letter '{possString[i]}'\tupdatedString: {updatedString}\t" +
+                        $"Position: {ConvertIdentifierToString(identifier)}");*/
+                    continue;       //skip the increment
+                }
+                i++;
+            } while (i < PositionPossibilities[identifier].Length);      
+            UpdateStrings();
+        }
+
+        public void PrintPossibilities()
+        {
+            string outString = "";
+            for (int i = 0; i < PositionPossibilities.Count; i++) 
+            {
+                outString = $"{outString}{ConvertIdentifierToString(PositionPossibilities.ElementAt(i).Key)}: {PositionPossibilities.ElementAt(i).Value}\n";               
+            }
+            Debug.WriteLine($"{outString}");
+        }
+
         public void PositionString(string input)
         {
-            ///TODO: Need to re-write this so that we can distinguish
-            ///between segments that are in random order (current implementation is assuming linear order)
-            ///idea: create hashmap list attached to Segment number to combine known strings to their #...
-            ///so, if we find a 1 and a 7, we can tell which number is the top segment by which letter not in 1
-            ///3 will contain 1 (way to differentiate 3 from 2,5)
-            ///6 will not contain 1 (way to differentiate 6 from 0,9)
             if (input.Length == 2)                      // then we've found a 1
             {
-                TopRight = "" + input[0];
-                BottomRight = "" + input[1];
+                RemoveAllPossibilitiesOtherThan(Identifier.TopRight, input[0], input[1]);
+                RemoveAllPossibilitiesOtherThan(Identifier.BottomRight, input[0], input[1]);
             }
             else if(input.Length == 3)                  // then we've found a 7
             {
-                Top = "" + input[0];
-                TopRight = "" + input[1];
-                BottomRight = "" + input[2];
+                RemoveAllPossibilitiesOtherThan(Identifier.Top, input[0], input[1], input[2]);
+                RemoveAllPossibilitiesOtherThan(Identifier.TopRight, input[0], input[1], input[2]);
+                RemoveAllPossibilitiesOtherThan(Identifier.BottomRight, input[0], input[1], input[2]);
             }
             else if (input.Length == 4)                  // then we've found a 4
             {
-                TopLeft = "" + input[0];
-                TopRight = "" + input[1];
-                Middle = "" + input[2];
-                BottomRight = "" + input[3];
+                RemoveAllPossibilitiesOtherThan(Identifier.TopLeft, input[0], input[1], input[2], input[3]);
+                RemoveAllPossibilitiesOtherThan(Identifier.TopRight, input[0], input[1], input[2], input[3]);
+                RemoveAllPossibilitiesOtherThan(Identifier.Middle, input[0], input[1], input[2], input[3]);
+                RemoveAllPossibilitiesOtherThan(Identifier.BottomRight, input[0], input[1], input[2], input[3]);
             }
             else if (input.Length == 7)                  
             {
@@ -169,23 +327,24 @@ namespace SevenSegmentSearch
             }
             else if (input.Length == 6)                  // then we've found a 0, 6, or 9
             {
-                Top = "" + input[0];              
-                TopLeft = "" + input[1];
+                ///TODO: Finish this logic
+                RemoveAllPossibilitiesOtherThan(Identifier.Top, input[0], input[1], input[2], input[3], input[4], input[5]);
+                RemoveAllPossibilitiesOtherThan(Identifier.TopLeft, input[0], input[1], input[2], input[3], input[4], input[5]);
+                RemoveAllPossibilitiesOtherThan(Identifier.BottomRight, input[0], input[1], input[2], input[3], input[4], input[5]);
+                RemoveAllPossibilitiesOtherThan(Identifier.Bottom, input[0], input[1], input[2], input[3], input[4], input[5]);
                 // Don't write top-right in this case {6}
                 // Don't write middle in this case {0}
                 // Don't write bottom-left in this case {9}
-                BottomRight = "" + input[^2];
-                Bottom = "" + input[^1];
             }
             else if (input.Length == 5)                  // then we've found a 2, 3, or 5
             {
-                Top = "" + input[0];
+                RemoveAllPossibilitiesOtherThan(Identifier.Top, input[0], input[1], input[2], input[3], input[4]);
+                RemoveAllPossibilitiesOtherThan(Identifier.Middle, input[0], input[1], input[2], input[3], input[4]);
+                RemoveAllPossibilitiesOtherThan(Identifier.Bottom, input[0], input[1], input[2], input[3], input[4]);
                 // Don't write top-left in this case {2,3}
                 // Don't write top-right in this case {5}
-                Middle = "" + input[2];
                 // Don't write bottom-left in this case {3,5}
                 // Don't write bottom-right in this case {2}
-                Bottom = "" + input[^1];
             }
         }
 
@@ -200,6 +359,28 @@ namespace SevenSegmentSearch
             {
                 return false;
             }
+        }
+
+        public string ConvertIdentifierToString(Identifier identifier)
+        {
+            switch(identifier)
+            {
+                case Identifier.Top:
+                    return "Top";
+                case Identifier.TopLeft:
+                    return "TopLeft";
+                case Identifier.TopRight:
+                    return "TopRight";
+                case Identifier.Middle:
+                    return "Middle";
+                case Identifier.BottomLeft:
+                    return "BottomLeft";
+                case Identifier.BottomRight:
+                    return "BottomRight";
+                case Identifier.Bottom:
+                    return "Bottom";
+            }
+            return "";
         }
 
         public void Print()
